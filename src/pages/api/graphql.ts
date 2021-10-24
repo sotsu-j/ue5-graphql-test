@@ -9,7 +9,7 @@ import { addResolversToSchema } from '@graphql-tools/schema'
 import { Resolvers } from '../../types/generated/graphql';
 
 // スキーマの定義
-const schema = loadSchemaSync(join( './src/**/*.graphql'), {
+const schema = loadSchemaSync(join('./src/**/*.graphql'), {
 	loaders: [new GraphQLFileLoader()],
 });
 
@@ -53,7 +53,7 @@ export default async function handler(
 	}
 
 	await startServer
-	await apolloServer.createHandler({
+	return await apolloServer.createHandler({
 		path: '/api/graphql',
 	})(req, res)
 }
