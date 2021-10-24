@@ -1,0 +1,7 @@
+type Query {
+	news: News
+}
+
+type News {
+	text: String
+}
