@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { join } from 'path'
 
 import { ApolloServer } from 'apollo-server-micro'
 import { loadSchemaSync } from '@graphql-tools/load'
@@ -9,7 +8,7 @@ import { addResolversToSchema } from '@graphql-tools/schema'
 import { Resolvers } from '../../types/generated/graphql';
 
 // スキーマの定義
-const schema = loadSchemaSync(join('./src/**/*.graphql'), {
+const schema = loadSchemaSync('./src/**/*.graphql', {
 	loaders: [new GraphQLFileLoader()],
 });
 
@@ -30,7 +29,10 @@ const resolvers: Resolvers = {
 	},
 }
 
-const apolloServer = new ApolloServer({ schema: addResolversToSchema({ schema, resolvers }) })
+const apolloServer = new ApolloServer({
+	schema: addResolversToSchema({ schema, resolvers }),
+	introspection: true,
+})
 
 const startServer = apolloServer.start()
 
@@ -53,7 +55,7 @@ export default async function handler(
 	}
 
 	await startServer
-	return await apolloServer.createHandler({
+	await apolloServer.createHandler({
 		path: '/api/graphql',
 	})(req, res)
 }
